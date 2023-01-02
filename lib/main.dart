@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
+import 'package:morevie/view/home.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+void main() => runApp(const MovieApp());
 
-class MyApp extends StatelessWidget {
-  const MyApp({ Key? key }) : super(key: key);
+class MovieApp extends StatelessWidget {
+  const MovieApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return GetMaterialApp(home: HomePage());
   }
 }
