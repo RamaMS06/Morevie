@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:morevie/controller/home_controller.dart';
 import 'package:morevie/service/Config.dart';
-import 'package:morevie/view/trending_page.dart';
+import 'package:morevie/view/detail_trending_page.dart';
 import 'package:skeletons/skeletons.dart';
 import 'package:flutter_bounce/flutter_bounce.dart';
 import '../utils/components.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends GetView<HomeController> {
   HomePage({Key? key}) : super(key: key);
-  var homeViewModel = Get.put(HomeController());
   @override
   Widget build(BuildContext context) {
+    Get.put(HomeController());
     return Scaffold(
+      backgroundColor: Get.isDarkMode ? Colors.black : Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -40,19 +42,19 @@ class HomePage extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: CardComponent(
                   pressed: () {
-                    Get.to(const TrendinPage());
+                    Get.to(const DetailTrendingPage());
                   },
                   content: SizedBox(
                       height: 230,
                       width: MediaQuery.of(context).size.width,
                       child: Obx(
                         () => Image.network(
-                          homeViewModel.listResult.isEmpty
+                          controller.listResult.isEmpty
                               ? 'https://upload.wikimedia.org/wikipedia/commons/5/59/Empty.png?20091205084734'
                               : Config.baseImage +
-                                  homeViewModel
+                                  controller
                                       .listResult[
-                                          homeViewModel.positionTrending.value]
+                                          controller.positionTrending.value]
                                       .backdropPath!,
                           loadingBuilder: ((context, child, loadingProgress) =>
                               loadingProgress == null
@@ -81,28 +83,28 @@ class HomePage extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15),
                       child: Skeleton(
-                        isLoading: homeViewModel.isLoadTrending.value,
+                        isLoading: controller.isLoadTrending.value,
                         skeleton: SkeletonAvatar(
                           style: SkeletonAvatarStyle(
                               height: 25,
                               width: MediaQuery.of(context).size.width / 1.8),
                         ),
                         child: TextComponent(
-                          label: homeViewModel.listResult.isEmpty
+                          label: controller.listResult.isEmpty
                               ? ''
-                              : homeViewModel
-                                          .listResult[homeViewModel
-                                              .positionTrending.value]
+                              : controller
+                                          .listResult[
+                                              controller.positionTrending.value]
                                           .originalTitle ==
                                       null
-                                  ? homeViewModel
+                                  ? controller
                                       .listResult[
-                                          homeViewModel.positionTrending.value]
+                                          controller.positionTrending.value]
                                       .originalName
                                       .toString()
-                                  : homeViewModel
+                                  : controller
                                       .listResult[
-                                          homeViewModel.positionTrending.value]
+                                          controller.positionTrending.value]
                                       .originalTitle
                                       .toString(),
                           color: Colors.black.withOpacity(0.6),
@@ -115,7 +117,7 @@ class HomePage extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15),
                       child: Skeleton(
-                          isLoading: homeViewModel.isLoadTrending.value,
+                          isLoading: controller.isLoadTrending.value,
                           skeleton: const SkeletonAvatar(
                               style:
                                   SkeletonAvatarStyle(height: 25, width: 100)),
@@ -129,7 +131,7 @@ class HomePage extends StatelessWidget {
                               const SizedBox(width: 10),
                               SizedBox(
                                 height: 27.5,
-                                child: homeViewModel.listGenre!.isEmpty
+                                child: controller.listGenreTrending!.isEmpty
                                     ? BoxTextComponent(
                                         label: TextComponent(
                                             label: 'Undifined',
@@ -155,16 +157,18 @@ class HomePage extends StatelessWidget {
                                         physics:
                                             const NeverScrollableScrollPhysics(),
                                         scrollDirection: Axis.horizontal,
-                                        itemCount:
-                                            homeViewModel.listGenre!.length,
+                                        itemCount: controller
+                                            .listGenreTrending!.length,
                                         itemBuilder: (context, index) {
                                           return BoxTextComponent(
                                               label: TextComponent(
-                                                  label: homeViewModel
-                                                          .listGenre!.isEmpty
+                                                  label: controller
+                                                          .listGenreTrending!
+                                                          .isEmpty
                                                       ? 'Undifined'
-                                                      : homeViewModel
-                                                          .listGenre![index],
+                                                      : controller
+                                                              .listGenreTrending![
+                                                          index],
                                                   size: 12,
                                                   color: Colors.black
                                                       .withOpacity(0.7)));
@@ -235,10 +239,10 @@ class HomePage extends StatelessWidget {
                                         child: SizedBox(
                                           height: 150,
                                           child: Image.network(
-                                            homeViewModel.listPopular!.isEmpty
+                                            controller.listPopular!.isEmpty
                                                 ? 'https://upload.wikimedia.org/wikipedia/commons/5/59/Empty.png?20091205084734'
                                                 : Config.baseImage +
-                                                    homeViewModel
+                                                    controller
                                                         .listPopular![index]
                                                         .backdropPath!,
                                             loadingBuilder: ((context, child,
@@ -278,7 +282,7 @@ class HomePage extends StatelessWidget {
                                                 children: [
                                                   SkeletonDefaultComponent(
                                                     width: 20,
-                                                    isSkeleton: homeViewModel
+                                                    isSkeleton: controller
                                                         .isLoadPopular.value,
                                                     child: const Icon(
                                                       Icons
@@ -288,16 +292,16 @@ class HomePage extends StatelessWidget {
                                                   ),
                                                   const SizedBox(width: 4),
                                                   SkeletonDefaultComponent(
-                                                    isSkeleton: homeViewModel
+                                                    isSkeleton: controller
                                                         .isLoadPopular.value,
                                                     child: TextComponent(
-                                                      label: homeViewModel
+                                                      label: controller
                                                               .listPopular!
                                                               .isEmpty
                                                           ? '-'
                                                           : DateFormat(
                                                                   'dd MMM yy')
-                                                              .format(homeViewModel
+                                                              .format(controller
                                                                   .listPopular![
                                                                       index]
                                                                   .releaseDate!),
@@ -319,44 +323,71 @@ class HomePage extends StatelessWidget {
                                           children: [
                                             SkeletonDefaultComponent(
                                               width: 120,
-                                              isSkeleton: homeViewModel
+                                              isSkeleton: controller
                                                   .isLoadPopular.value,
-                                              child: Expanded(
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Expanded(
-                                                      child: TextComponent(
-                                                        maxLines: 2,
-                                                        label: homeViewModel
-                                                                .listPopular!
-                                                                .isEmpty
-                                                            ? '-'
-                                                            : homeViewModel
-                                                                .listPopular![
-                                                                    index]
-                                                                .title!,
-                                                        weight: FontWeight.w600,
-                                                      ),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Expanded(
+                                                    child: TextComponent(
+                                                      maxLines: 2,
+                                                      label: controller
+                                                              .listPopular!
+                                                              .isEmpty
+                                                          ? '-'
+                                                          : controller
+                                                              .listPopular![
+                                                                  index]
+                                                              .title!,
+                                                      weight: FontWeight.w600,
                                                     ),
-                                                    const SizedBox(width: 5),
-                                                    const Icon(Icons.more_horiz)
-                                                  ],
-                                                ),
+                                                  ),
+                                                  const SizedBox(width: 5),
+                                                  const Icon(Icons.more_horiz)
+                                                ],
                                               ),
                                             ),
+                                            const SizedBox(height: 5),
+                                            Obx(
+                                              () => SkeletonDefaultComponent(
+                                                width: 100,
+                                                isSkeleton: controller
+                                                    .isLoadPopular.value,
+                                                child: RatingBar.builder(
+                                                    direction: Axis.horizontal,
+                                                    initialRating: controller
+                                                            .listPopular!
+                                                            .isEmpty
+                                                        ? 0
+                                                        : controller
+                                                                .listPopular![
+                                                                    index]
+                                                                .voteAverage! /
+                                                            3,
+                                                    allowHalfRating: true,
+                                                    itemCount: 5,
+                                                    itemSize: 18,
+                                                    itemBuilder: ((context,
+                                                            index) =>
+                                                        const Icon(
+                                                          Icons.star,
+                                                          color: Colors.amber,
+                                                        )),
+                                                    onRatingUpdate:
+                                                        (rating) {}),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 5),
                                           ],
                                         ),
-                                      )
+                                      ),
                                     ],
                                   ),
-                                  pressed: () {
-                                    print('hehe');
-                                  },
+                                  pressed: () {},
                                   colors: Colors.black.withOpacity(0.025),
                                   radius: 20,
                                   elevation: 0,

@@ -6,4 +6,5 @@ abstract class Config {
   static const baseGenres = "https://api.themoviedb.org/3";
   static const getTrending = "trending/all/day";
   static const getPopular = "movie/popular";
+  static const getSearch = "search/movie";
 }

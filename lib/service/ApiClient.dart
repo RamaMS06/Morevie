@@ -1,5 +1,6 @@
 import 'package:morevie/model/Genres.dart';
 import 'package:morevie/model/Popular.dart';
+import 'package:morevie/model/Search.dart';
 import 'package:morevie/model/Trending.dart';
 import 'package:dio/dio.dart';
 import 'package:morevie/service/Config.dart';
@@ -31,6 +32,16 @@ class ApiClient extends DioClient {
     try {
       var response = await dio.get(Config.getPopular);
       return Popular.fromJson(response.data);
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<Search?> getSearch(String query) async {
+    try {
+      var response = await dio.get(Config.getSearch,
+          queryParameters: {"query": query.isEmpty ? "movie" : query});
+      return Search.fromJson(response.data);
     } catch (e) {
       throw Exception(e);
     }

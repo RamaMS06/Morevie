@@ -8,10 +8,11 @@ class HomeController extends GetxController {
   RxList<Result> listResult = <Result>[].obs;
   RxBool isLoadTrending = true.obs;
   RxInt positionTrending = 0.obs;
-  RxString genres = "".obs;
-  RxList<String>? listGenre = <String>[].obs;
+  RxList<String>? listGenreTrending = <String>[].obs;
+  RxList<String>? listGenrePopular = <String>[].obs;
   RxList<PopularResult>? listPopular = <PopularResult>[].obs;
   RxBool isLoadPopular = true.obs;
+  RxInt tabIndex = 0.obs;
 
   getListTrending() async {
     var getList = await ApiClient().getListTrending(1);
@@ -20,19 +21,36 @@ class HomeController extends GetxController {
     isLoadTrending.value = false;
   }
 
-  getGenres() async {
+  getGenresTrending() async {
     var getGenres = await ApiClient().getGenres();
-    var genresId =
+    var genresTrending =
         listResult.isEmpty ? [] : listResult[positionTrending.value].genreIds;
 
-    for (var id in genresId!) {
+    for (var id in genresTrending!) {
       for (var genre in getGenres.genres!) {
         if (id == genre.id) {
-          genres.value = genre.name!;
-          if (listGenre!.length >= 3) {
-            listGenre!.remove(listGenre!.last);
+          if (listGenreTrending!.length >= 3) {
+            listGenreTrending!.remove(listGenreTrending!.last);
           } else {
-            listGenre!.add(genre.name!);
+            listGenreTrending!.add(genre.name!);
+          }
+        }
+      }
+    }
+  }
+
+  getGenresPopular(int index) async {
+    var getPopular = await ApiClient().getGenres();
+    var genresPopular =
+        listPopular!.isEmpty ? [] : listPopular![index].genreIds;
+
+    for (var id in genresPopular!) {
+      for (var genre in getPopular.genres!) {
+        if (id == genre.id) {
+          if (listGenrePopular!.length >= 3) {
+            listGenrePopular!.remove(listGenrePopular!.last);
+          } else {
+            listGenrePopular!.add(genre.name!);
           }
         }
       }
@@ -45,10 +63,15 @@ class HomeController extends GetxController {
     isLoadPopular.value = false;
   }
 
+  changeTabIndex(int index) {
+    tabIndex.value = index;
+    update();
+  }
+
   @override
   void onInit() {
     getListTrending();
-    getGenres();
+    getGenresTrending();
     getPopular();
     super.onInit();
   }

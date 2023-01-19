@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class TrendinPage extends StatelessWidget {
-  const TrendinPage({Key? key}) : super(key: key);
+class DetailTrendingPage extends StatelessWidget {
+  const DetailTrendingPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

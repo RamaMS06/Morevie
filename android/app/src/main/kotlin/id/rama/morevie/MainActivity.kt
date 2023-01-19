@@ -1,4 +1,4 @@
-package com.example.morevie
+package id.rama.morevie
 
 import io.flutter.embedding.android.FlutterActivity
 
