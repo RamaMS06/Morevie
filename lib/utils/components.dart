@@ -222,14 +222,118 @@ class EmptyListComponent extends StatelessWidget {
     return Column(
       children: [
         Lottie.asset('assets/lottie/lottie_empty.json',
-            height: 150, width: 150, fit: BoxFit.cover),
+            height: 180, width: 200, fit: BoxFit.cover),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 45),
+          padding: const EdgeInsets.symmetric(horizontal: 45),
           child: TextComponent(
               align: TextAlign.center,
               label: "The movie you are looking\nfor does not exist  :("),
         )
       ],
+    );
+  }
+}
+
+class CardTextComponent extends StatelessWidget {
+  String label;
+  VoidCallback? callback;
+  Color? textColor;
+  Color? bgColor;
+  String assetIcon;
+  CardTextComponent(
+      {required this.label,
+      required this.assetIcon,
+      this.textColor,
+      this.bgColor,
+      this.callback,
+      Key? key})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      color: bgColor,
+      shape: RoundedRectangleBorder(
+          side: const BorderSide(color: Colors.redAccent),
+          borderRadius: BorderRadius.circular(5)),
+      shadowColor: Colors.redAccent,
+      child: InkWell(
+        onTap: callback,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Image.asset('assets/images/' + assetIcon, width: 15, height: 15),
+              const SizedBox(width: 7.5),
+              TextComponent(
+                weight: FontWeight.w500,
+                color: textColor,
+                label: label,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class PoppinStyle extends TextStyle {
+  PoppinStyle({Key? key});
+
+  @override
+  TextStyle build(BuildContext context) {
+    return TextStyle(fontFamily: 'Poppins', color: color);
+  }
+}
+
+class TextFormComponent extends StatelessWidget {
+  String? hintText;
+  String? label;
+  IconData? icon;
+  Function(String)? onChanged;
+  Function()? onTap;
+  Function(String)? onComplete;
+  TextEditingController? controller;
+  TextFormComponent(
+      {this.hintText,
+      this.label,
+      this.icon,
+      this.onChanged,
+      this.onTap,
+      this.controller,
+      this.onComplete,
+      Key? key})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: controller,
+      cursorColor: Colors.redAccent,
+      onChanged: onChanged,
+      onFieldSubmitted: onComplete,
+      onTap: onTap,
+      style: PoppinStyle().copyWith(
+          color: Colors.black.withOpacity(0.8),
+          fontSize: 14,
+          fontWeight: FontWeight.w500),
+      decoration: InputDecoration(
+          floatingLabelStyle: PoppinStyle().copyWith(color: Colors.redAccent),
+          labelText: label,
+          prefixIcon: icon == null ? null : Icon(icon, size: 20),
+          labelStyle: PoppinStyle(),
+          prefix: const SizedBox(width: 10),
+          hintStyle:
+              PoppinStyle().copyWith(fontSize: 14, fontWeight: FontWeight.w500),
+          hintText: hintText,
+          contentPadding: const EdgeInsets.only(left: 10),
+          focusColor: Colors.redAccent,
+          focusedBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: Colors.redAccent, width: 2),
+              borderRadius: BorderRadius.circular(10)),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
     );
   }
 }

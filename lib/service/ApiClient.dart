@@ -37,10 +37,13 @@ class ApiClient extends DioClient {
     }
   }
 
-  Future<Search?> getSearch(String query) async {
+  Future<Search?> getSearch(String query, bool isAdult, int year) async {
     try {
-      var response = await dio.get(Config.getSearch,
-          queryParameters: {"query": query.isEmpty ? "movie" : query});
+      var response = await dio.get(Config.getSearch, queryParameters: {
+        "query": query.isEmpty ? "movie" : query,
+        "include_adult": isAdult,
+        "year": year
+      });
       return Search.fromJson(response.data);
     } catch (e) {
       throw Exception(e);
