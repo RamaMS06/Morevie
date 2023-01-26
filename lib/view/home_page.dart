@@ -1,9 +1,12 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:morevie/controller/home_controller.dart';
+import 'package:morevie/model/DetailMovie.dart';
 import 'package:morevie/service/Config.dart';
+import 'package:morevie/view/detail_movie_page.dart';
 import 'package:morevie/view/detail_trending_page.dart';
 import 'package:skeletons/skeletons.dart';
 import 'package:flutter_bounce/flutter_bounce.dart';
@@ -42,37 +45,18 @@ class HomePage extends GetView<HomeController> {
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: CardComponent(
                   pressed: () {
-                    Get.to(const DetailTrendingPage());
+                    Get.to(DetailMoviePage(),
+                        arguments: {"movieId": controller.idTrending.value});
                   },
-                  content: SizedBox(
+                  content: Obx(() => CachedNetworkImage(
                       height: 230,
-                      width: MediaQuery.of(context).size.width,
-                      child: Obx(
-                        () => Image.network(
-                          controller.listResult.isEmpty
-                              ? 'https://upload.wikimedia.org/wikipedia/commons/5/59/Empty.png?20091205084734'
-                              : Config.baseImage +
-                                  controller
-                                      .listResult[
-                                          controller.positionTrending.value]
-                                      .backdropPath!,
-                          loadingBuilder: ((context, child, loadingProgress) =>
-                              loadingProgress == null
-                                  ? child
-                                  : Skeleton(
-                                      isLoading: true,
-                                      skeleton: SkeletonAvatar(
-                                        style: SkeletonAvatarStyle(
-                                            height: 270,
-                                            width: MediaQuery.of(context)
-                                                .size
-                                                .width),
-                                      ),
-                                      child: child,
-                                    )),
-                          fit: BoxFit.cover,
-                        ),
-                      )),
+                      fit: BoxFit.cover,
+                      imageUrl: controller.listResult.isEmpty
+                          ? 'https://upload.wikimedia.org/wikipedia/commons/5/59/Empty.png?20091205084734'
+                          : Config.baseImage +
+                              controller
+                                  .listResult[controller.positionTrending.value]
+                                  .backdropPath!)),
                 ),
               ),
               const SizedBox(height: 15),
@@ -221,7 +205,7 @@ class HomePage extends GetView<HomeController> {
                                   maxCrossAxisExtent: 250,
                                   crossAxisSpacing: 5,
                                   mainAxisExtent: 300),
-                          itemCount: 4,
+                          itemCount: 10,
                           itemBuilder: (_, index) {
                             return Padding(
                               padding: const EdgeInsets.only(bottom: 15),
@@ -236,35 +220,16 @@ class HomePage extends GetView<HomeController> {
                                                 BorderRadius.circular(15)),
                                         clipBehavior:
                                             Clip.antiAliasWithSaveLayer,
-                                        child: SizedBox(
-                                          height: 150,
-                                          child: Image.network(
-                                            controller.listPopular!.isEmpty
+                                        child: CachedNetworkImage(
+                                            height: 150,
+                                            fit: BoxFit.cover,
+                                            imageUrl: controller
+                                                    .listPopular!.isEmpty
                                                 ? 'https://upload.wikimedia.org/wikipedia/commons/5/59/Empty.png?20091205084734'
                                                 : Config.baseImage +
                                                     controller
                                                         .listPopular![index]
-                                                        .backdropPath!,
-                                            loadingBuilder: ((context, child,
-                                                    loadingProgress) =>
-                                                loadingProgress == null
-                                                    ? child
-                                                    : Skeleton(
-                                                        isLoading: true,
-                                                        skeleton:
-                                                            SkeletonAvatar(
-                                                          style: SkeletonAvatarStyle(
-                                                              width:
-                                                                  MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width,
-                                                              height: 150),
-                                                        ),
-                                                        child: child)),
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
+                                                        .backdropPath!),
                                       ),
                                       Positioned(
                                         top: 135,
@@ -387,7 +352,12 @@ class HomePage extends GetView<HomeController> {
                                       ),
                                     ],
                                   ),
-                                  pressed: () {},
+                                  pressed: () {
+                                    Get.to(DetailMoviePage(), arguments: {
+                                      "movieId":
+                                          controller.listPopular?[index].id ?? 0
+                                    });
+                                  },
                                   colors: Colors.black.withOpacity(0.025),
                                   radius: 20,
                                   elevation: 0,

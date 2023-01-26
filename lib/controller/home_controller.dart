@@ -13,12 +13,14 @@ class HomeController extends GetxController {
   RxList<PopularResult>? listPopular = <PopularResult>[].obs;
   RxBool isLoadPopular = true.obs;
   RxInt tabIndex = 0.obs;
+  RxInt idTrending = 0.obs;
 
   getListTrending() async {
     var getList = await ApiClient().getListTrending(1);
     listResult.value = getList!.results!;
     positionTrending.value = Random().nextInt(5);
     isLoadTrending.value = false;
+    idTrending.value = getList.results![positionTrending.value].id ?? 0;
   }
 
   getGenresTrending() async {

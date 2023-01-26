@@ -337,3 +337,24 @@ class TextFormComponent extends StatelessWidget {
     );
   }
 }
+
+class SkeletonComponent extends StatelessWidget {
+  bool isLoad;
+  double? width;
+  Widget child;
+  SkeletonComponent(
+      {required this.isLoad, required this.child, this.width, Key? key})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Skeleton(
+        isLoading: isLoad,
+        skeleton: SkeletonAvatar(
+            style: SkeletonAvatarStyle(
+          height: 25,
+          width: width ?? 150,
+        )),
+        child: child);
+  }
+}

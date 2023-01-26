@@ -7,6 +7,7 @@ import 'package:lottie/lottie.dart';
 import 'package:morevie/controller/search_controller.dart';
 import 'package:morevie/service/Config.dart';
 import 'package:morevie/utils/components.dart';
+import 'package:morevie/view/detail_movie_page.dart';
 import 'package:skeletons/skeletons.dart';
 
 // class SearchPage extends GetView
@@ -197,8 +198,13 @@ class SearchPage extends GetView<SearchController> {
                       skeleton: SkeletonListView(),
                       isLoading: controller.isLoadSearch.value,
                       child: ListView.separated(
-                          physics: const AlwaysScrollableScrollPhysics(),
-                          itemBuilder: ((context, index) => Row(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        itemBuilder: ((context, index) => InkWell(
+                              onTap: () =>
+                                  Get.to(DetailMoviePage(), arguments: {
+                                'movieId': controller.listSearch[index]?.id ?? 0
+                              }),
+                              child: Row(
                                 children: [
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
@@ -320,16 +326,18 @@ class SearchPage extends GetView<SearchController> {
                                     ),
                                   )
                                 ],
-                              )),
-                          separatorBuilder: (context, index) => Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 15, horizontal: 15),
-                                child: Container(
-                                    width: MediaQuery.of(context).size.width,
-                                    height: 0.5,
-                                    color: Colors.black.withOpacity(0.1)),
                               ),
-                          itemCount: controller.listSearch.length),
+                            )),
+                        separatorBuilder: (context, index) => Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 15),
+                          child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              height: 0.5,
+                              color: Colors.black.withOpacity(0.1)),
+                        ),
+                        itemCount: controller.listSearch.length,
+                      ),
                     ),
                   ),
           ],

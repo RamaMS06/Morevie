@@ -7,4 +7,5 @@ abstract class Config {
   static const getTrending = "trending/all/day";
   static const getPopular = "movie/popular";
   static const getSearch = "search/movie";
+  static const getDetailMovie = "movie/";
 }

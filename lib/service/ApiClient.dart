@@ -1,3 +1,4 @@
+import 'package:morevie/model/DetailMovie.dart';
 import 'package:morevie/model/Genres.dart';
 import 'package:morevie/model/Popular.dart';
 import 'package:morevie/model/Search.dart';
@@ -46,6 +47,15 @@ class ApiClient extends DioClient {
       });
       return Search.fromJson(response.data);
     } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<DetailMovie?> getDetailMovie(int movieId) async {
+    try {
+      var response = await dio.get(Config.getDetailMovie + "$movieId");
+      return DetailMovie.fromJson(response.data);
+    } on DioError catch (e) {
       throw Exception(e);
     }
   }
